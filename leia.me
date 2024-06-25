@@ -1,0 +1,71 @@
+-- Tabela: users
+CREATE TABLE users (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    password VARCHAR(255),
+    role ENUM('aluno', 'professor', 'secretaria', 'admin')
+);
+
+-- Tabela: turma
+CREATE TABLE turma (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    professor_id INT(11),
+    curso_id INT(11),
+    FOREIGN KEY (professor_id) REFERENCES users(id),
+    FOREIGN KEY (curso_id) REFERENCES courses(id)
+);
+
+-- Tabela: grades
+CREATE TABLE grades (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    student_id INT(11),
+    turma_id INT(11),
+    grade DECIMAL(3,1),
+    FOREIGN KEY (student_id) REFERENCES users(id),
+    FOREIGN KEY (turma_id) REFERENCES turma(id)
+);
+
+-- Tabela: enrollments
+CREATE TABLE enrollments (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    student_id INT(11),
+    turma_id INT(11),
+    FOREIGN KEY (student_id) REFERENCES users(id),
+    FOREIGN KEY (turma_id) REFERENCES turma(id)
+);
+
+-- Tabela: documents
+CREATE TABLE documents (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    student_id INT(11),
+    type VARCHAR(100),
+    status ENUM('requested', 'issued'),
+    file_path VARCHAR(255),
+    FOREIGN KEY (student_id) REFERENCES users(id)
+);
+
+-- Tabela: courses
+CREATE TABLE courses (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100)
+);
+
+-- Tabela: appointments
+CREATE TABLE appointments (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    student_id INT(11),
+    datetime DATETIME,
+    status ENUM('pending', 'confirmed', 'completed'),
+    FOREIGN KEY (student_id) REFERENCES users(id)
+);
+
+-- Tabela: activities
+CREATE TABLE activities (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    description TEXT,
+    turma_id INT(11),
+    class_id INT(11),
+    FOREIGN KEY (turma_id) REFERENCES turma(id)
+);
